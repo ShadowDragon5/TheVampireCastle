@@ -31,7 +31,7 @@ void AnimatedSprite::playAnimation(std::string animation, bool once)
 	}
 }
 
-void AnimatedSprite::update(int elapsedTime)
+void AnimatedSprite::update(float elapsedTime)
 {
 	Sprite::update();
 
@@ -60,16 +60,8 @@ void AnimatedSprite::draw(SDL_Renderer &renderer, glb::Vec2i destination)
 		SDL_Rect desRect = { destination.x, destination.y, _srcRect.w * glb::scale, _srcRect.h * glb::scale };
 		SDL_Rect srceRect = _animations[_curAnim][_frameIndex];
 		SDL_RenderCopy(&renderer, _spriteSheet, &srceRect, &desRect);
-		//std::printf("Drawing...\n");
 	}
 }
-
-void AnimatedSprite::setUpAnimations()
-{
-	// remove
-	addAnimation("WalkForward", glb::Vec4i(16, 0, 16, 16), 2);
-}
-
 
 void AnimatedSprite::addAnimation(std::string name, glb::Vec4i src, int frames)
 {

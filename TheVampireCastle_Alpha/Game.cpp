@@ -20,9 +20,8 @@ Game::~Game()
 void Game::run()
 {
 	initSystems();
-
-	_player.init(glb::Vec4i(0, 0, 16, 16), glb::Vec2f(100.0f, 100.0f), "Textures/Player.png", *_renderer, 25);
-	_player.setUpAnimations();
+	
+	_player.init(*_renderer, glb::Vec2f(100, 100));
 
 	gameLoop();
 }
@@ -55,10 +54,7 @@ void Game::gameLoop()
 
 		_input.beginNewFrame();
 
-
 		processInput();
-
-		//draw Game
 
 		drawGame();
 
@@ -74,12 +70,13 @@ void Game::gameLoop()
 			i = 0;
 		}
 		
+
 		float frameTicks = SDL_GetTicks() - startTicks;
 		update(frameTicks < _maxFPS ? frameTicks : _maxFPS);
 
 		//Apriboja FPS iki maxFPS
-		if (1000.0f / _maxFPS > frameTicks)
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		//if (1000.0f / _maxFPS > frameTicks)
+		//	SDL_Delay(1000.0f / _maxFPS - frameTicks);
 	}
 }
 
@@ -95,6 +92,28 @@ void Game::processInput()
 		case SDL_QUIT:
 			_gameState = GameState::EXIT;
 			break;
+			/*
+		case SDL_KEYDOWN:
+			switch (evnt.key.keysym.sym)
+			{
+			case SDLK_w:
+				_player.moveUp();
+				break;
+			case SDLK_s:
+				_player.moveDown();
+				break;
+			case SDLK_a:
+				_player.moveLeft();
+				break;
+			case SDLK_d:
+				_player.moveRight();
+				break;
+			}
+			break;
+		case SDL_KEYUP:
+			_player.stopMoving();
+			break;
+			*/
 		case SDL_KEYDOWN:
 			if (!evnt.key.repeat)
 				_input.keyDownEvent(evnt);
@@ -105,8 +124,20 @@ void Game::processInput()
 		default:
 			break;
 		}
+		//TODO: fix diaginal movement
 		if (_input.isKeyPressed(SDL_SCANCODE_ESCAPE))
 			_gameState = GameState::EXIT;
+		else if (_input.isKeyHeld(SDL_SCANCODE_W))
+			_player.moveUp();
+		else if (_input.isKeyHeld(SDL_SCANCODE_S))
+			_player.moveDown();
+		else if (_input.isKeyHeld(SDL_SCANCODE_D))
+			_player.moveRight();
+		else if (_input.isKeyHeld(SDL_SCANCODE_A))
+			_player.moveLeft();
+		else if (!_input.isKeyHeld(SDL_SCANCODE_W) && !_input.isKeyHeld(SDL_SCANCODE_S)
+			&& !_input.isKeyHeld(SDL_SCANCODE_D) && !_input.isKeyHeld(SDL_SCANCODE_A))
+			_player.stopMoving();
 	}
 }
 
@@ -115,8 +146,7 @@ void Game::drawGame()
 {
 	SDL_RenderClear(_renderer);
 
-	_player.playAnimation("WalkForward");
-	_player.draw(*_renderer, glb::Vec2i(100, 100));
+	_player.draw(*_renderer);
 
 	SDL_RenderPresent(_renderer);
 }

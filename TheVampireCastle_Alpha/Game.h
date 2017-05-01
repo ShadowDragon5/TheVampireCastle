@@ -3,7 +3,7 @@
 #include <SDL\SDL_image.h>
 #include "Input.h"
 
-#include "AnimatedSprite.h"
+#include "Player.h"
 
 enum GameState
 {
@@ -41,6 +41,6 @@ private:
 	float _maxFPS;				//Daugiausia leidziamu kadru per sekunde
 
 
-	AnimatedSprite _player;
+	Player _player;
 };
 

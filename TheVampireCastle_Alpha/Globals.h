@@ -4,6 +4,14 @@ namespace glb
 {
 	const float scale = 4.0f;
 
+	enum Direction
+	{
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN
+	};
+
 	struct Vec2f
 	{
 		float x;

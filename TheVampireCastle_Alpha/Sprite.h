@@ -18,9 +18,6 @@ public:
 protected:
 	SDL_Rect _srcRect;
 	SDL_Texture* _spriteSheet;
-
-private:
-
 	float _x, _y;					//Position
 };
 

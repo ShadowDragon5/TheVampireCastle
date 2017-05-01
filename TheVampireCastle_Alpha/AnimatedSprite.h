@@ -5,7 +5,7 @@
 #include <vector>
 #include "Globals.h"
 
-class AnimatedSprite: Sprite
+class AnimatedSprite: public Sprite
 {
 public:
 	AnimatedSprite();
@@ -15,11 +15,10 @@ public:
 
 	void playAnimation(std::string animation, bool once = false);
 
-	void update(int elapsedTime);
+	void update(float elapsedTime);
 
 	void draw(SDL_Renderer &renderer, glb::Vec2i destination);
 
-	virtual void setUpAnimations();
 
 private:
 
@@ -36,12 +35,14 @@ protected:
 	std::string _curAnim;
 	bool _once;
 
+	inline void setVisible(bool visible) { this->_visible = visible; }
+
 	void addAnimation(std::string name, glb::Vec4i src, int frames);
 
 	void resetAnimations();
 
 	void stopAnimation();
 
-	inline void setVisible(bool visible) { this->_visible = visible; }
+	virtual void setUpAnimations() = 0;
 };
 
