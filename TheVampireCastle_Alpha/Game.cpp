@@ -21,6 +21,9 @@ void Game::run()
 {
 	initSystems();
 
+	_player.init(glb::Vec4i(0, 0, 16, 16), glb::Vec2f(100.0f, 100.0f), "Textures/Player.png", *_renderer, 25);
+	_player.setUpAnimations();
+
 	gameLoop();
 }
 
@@ -49,26 +52,30 @@ void Game::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		float startTicks = SDL_GetTicks();
+
 		_input.beginNewFrame();
+
 
 		processInput();
 
-		//drawGame
+		//draw Game
 
-		calculateFPS();
+		drawGame();
+
 
 		//for debug
-
+		
+		calculateFPS();
 		static int i = 0;
-		if (++i % 10 == 0)
+		if (++i % 100 == 0)
 		{
+			system("cls");
 			std::cout << _fps << std::endl;
 			i = 0;
 		}
-
-
-
+		
 		float frameTicks = SDL_GetTicks() - startTicks;
+		update(frameTicks < _maxFPS ? frameTicks : _maxFPS);
 
 		//Apriboja FPS iki maxFPS
 		if (1000.0f / _maxFPS > frameTicks)
@@ -101,6 +108,23 @@ void Game::processInput()
 		if (_input.isKeyPressed(SDL_SCANCODE_ESCAPE))
 			_gameState = GameState::EXIT;
 	}
+}
+
+
+void Game::drawGame()
+{
+	SDL_RenderClear(_renderer);
+
+	_player.playAnimation("WalkForward");
+	_player.draw(*_renderer, glb::Vec2i(100, 100));
+
+	SDL_RenderPresent(_renderer);
+}
+
+
+void Game::update(float elapsedTime)
+{
+	_player.update(elapsedTime);
 }
 
 //Skaiciuoja kadrus per sekunde
@@ -139,3 +163,4 @@ void Game::calculateFPS()
 	else
 		_fps = -1.0f;
 }
+

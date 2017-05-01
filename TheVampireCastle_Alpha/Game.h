@@ -1,6 +1,9 @@
 #pragma once
 #include <SDL\SDL.h>
+#include <SDL\SDL_image.h>
 #include "Input.h"
+
+#include "AnimatedSprite.h"
 
 enum GameState
 {
@@ -20,9 +23,10 @@ private:
 	void initSystems();
 	void gameLoop();
 	void processInput();
+	void drawGame();
+	void update(float elapsedTime);
 
 	void calculateFPS();
-
 
 	SDL_Window* _window;		//Lango rodykle
 	SDL_Renderer* _renderer;
@@ -35,5 +39,8 @@ private:
 
 	float _fps;					//Kadrai per sekunde
 	float _maxFPS;				//Daugiausia leidziamu kadru per sekunde
+
+
+	AnimatedSprite _player;
 };
 
