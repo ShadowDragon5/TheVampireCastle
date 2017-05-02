@@ -18,7 +18,7 @@ void Player::init(SDL_Renderer &renderer, glb::Vec2f pos)
 	ResourceManager::loadImage("Textures/Player.png");
 
 	setUpAnimations();
-	playAnimation("IdleDown");
+	_facing = glb::DOWN;
 }
 
 

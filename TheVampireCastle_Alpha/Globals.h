@@ -11,7 +11,7 @@ namespace glb
 		UP,
 		DOWN
 	};
-
+	
 	struct Vec2f
 	{
 		float x;
@@ -22,7 +22,7 @@ namespace glb
 			y(y)
 		{}
 	};
-
+	
 	struct Vec2i
 	{
 		int x;
@@ -31,6 +31,11 @@ namespace glb
 		Vec2i(int x, int y) :
 			x(x),
 			y(y)
+		{}
+
+		Vec2i():
+			x(0),
+			y(0)
 		{}
 	};
 
