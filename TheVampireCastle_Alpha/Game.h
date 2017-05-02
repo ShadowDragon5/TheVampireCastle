@@ -1,9 +1,10 @@
 #pragma once
 #include <SDL\SDL.h>
 #include <SDL\SDL_image.h>
-#include "Input.h"
 
+#include "Input.h"
 #include "Player.h"
+#include "Level.h"
 
 enum GameState
 {
@@ -40,7 +41,8 @@ private:
 	float _fps;					//Kadrai per sekunde
 	float _maxFPS;				//Daugiausia leidziamu kadru per sekunde
 
-
 	Player _player;
+
+	Level _level;
 };
 

@@ -22,6 +22,7 @@ void Game::run()
 	initSystems();
 	
 	_player.init(*_renderer, glb::Vec2f(100, 100));
+	_level.init("FirstFloor", glb::Vec2i(100, 100), *_renderer);
 
 	gameLoop();
 }
@@ -43,6 +44,8 @@ void Game::initSystems()
 
 	SDL_SetWindowTitle(_window, "The Vampire Castle");
 
+	//Sets background color
+	SDL_SetRenderDrawColor(_renderer, 255, 0, 255, 255);
 }
 
 //Zaidimo ciklas
@@ -60,7 +63,7 @@ void Game::gameLoop()
 
 
 		//for debug
-		
+		/*
 		calculateFPS();
 		static int i = 0;
 		if (++i % 100 == 0)
@@ -68,9 +71,8 @@ void Game::gameLoop()
 			system("cls");
 			std::cout << _fps << std::endl;
 			i = 0;
-		}
+		}*/
 		
-
 		float frameTicks = SDL_GetTicks() - startTicks;
 		update(frameTicks < _maxFPS ? frameTicks : _maxFPS);
 
@@ -146,6 +148,7 @@ void Game::drawGame()
 {
 	SDL_RenderClear(_renderer);
 
+	_level.draw(*_renderer);
 	_player.draw(*_renderer);
 
 	SDL_RenderPresent(_renderer);
@@ -155,6 +158,7 @@ void Game::drawGame()
 void Game::update(float elapsedTime)
 {
 	_player.update(elapsedTime);
+	_level.update(elapsedTime);
 }
 
 //Skaiciuoja kadrus per sekunde
