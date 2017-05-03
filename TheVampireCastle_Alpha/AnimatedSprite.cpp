@@ -53,11 +53,11 @@ void AnimatedSprite::update(float elapsedTime)
 	}
 }
 
-void AnimatedSprite::draw(SDL_Renderer &renderer, glb::Vec2i destination)
+void AnimatedSprite::draw(SDL_Renderer &renderer, glb::Vec2i destination, float scale)
 {
 	if (_visible)
 	{
-		SDL_Rect desRect = { destination.x, destination.y, _srcRect.w * glb::scale, _srcRect.h * glb::scale };
+		SDL_Rect desRect = { destination.x, destination.y, _srcRect.w * scale, _srcRect.h * scale };
 		SDL_Rect srceRect = _animations[_curAnim][_frameIndex];
 		SDL_RenderCopy(&renderer, _spriteSheet, &srceRect, &desRect);
 	}

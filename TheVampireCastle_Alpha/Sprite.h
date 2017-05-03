@@ -13,7 +13,7 @@ public:
 
 	virtual void update();
 
-	void draw(SDL_Renderer &renderer, glb::Vec2i destination);
+	void draw(SDL_Renderer &renderer, glb::Vec2i destination, float scale);
 
 protected:
 	SDL_Rect _srcRect;

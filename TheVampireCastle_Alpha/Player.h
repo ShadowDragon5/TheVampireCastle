@@ -10,7 +10,7 @@ public:
 	~Player();
 
 	void init(SDL_Renderer &renderer, glb::Vec2f pos);
-	void draw(SDL_Renderer &renderer);
+	void draw(SDL_Renderer &renderer, float scale);
 	void update(float elapsedTime);
 
 	void moveUp();
@@ -25,6 +25,6 @@ private:
 
 	glb::Direction _facing;
 
-	const float _speed = glb::scale / 20;
+	float _speed = glb::scale / 15.0f;
 };
 

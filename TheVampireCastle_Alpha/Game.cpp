@@ -7,13 +7,16 @@ Game::Game():
 	_renderer(nullptr),
 	_screenWidth(854),
 	_screenHeight(480),
-	_maxFPS(60.0f)
+	_maxFPS(60.0f),
+	_scale(glb::scale)
 {
 }
 
 
 Game::~Game()
 {
+	SDL_DestroyWindow(_window);
+	SDL_DestroyRenderer(_renderer);
 }
 
 
@@ -22,7 +25,7 @@ void Game::run()
 	initSystems();
 	
 	_player.init(*_renderer, glb::Vec2f(100, 100));
-	_level.init("FirstFloor", glb::Vec2i(100, 100), *_renderer);
+	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 
 	gameLoop();
 }
@@ -94,28 +97,6 @@ void Game::processInput()
 		case SDL_QUIT:
 			_gameState = GameState::EXIT;
 			break;
-			/*
-		case SDL_KEYDOWN:
-			switch (evnt.key.keysym.sym)
-			{
-			case SDLK_w:
-				_player.moveUp();
-				break;
-			case SDLK_s:
-				_player.moveDown();
-				break;
-			case SDLK_a:
-				_player.moveLeft();
-				break;
-			case SDLK_d:
-				_player.moveRight();
-				break;
-			}
-			break;
-		case SDL_KEYUP:
-			_player.stopMoving();
-			break;
-			*/
 		case SDL_KEYDOWN:
 			if (!evnt.key.repeat)
 				_input.keyDownEvent(evnt);
@@ -148,8 +129,17 @@ void Game::drawGame()
 {
 	SDL_RenderClear(_renderer);
 
-	_level.draw(*_renderer);
-	_player.draw(*_renderer);
+	//Nuskaito lango dydi ir pakeicia piesiamu objektu dydi pagal tai
+	/*
+	int h;
+	SDL_GetWindowSize(_window, nullptr, &h);
+	_scale = h * 3.0f / 480;
+	*/
+
+	//TODO::recalculate tile postition for scaling
+	_level.draw(*_renderer, _scale);
+
+	_player.draw(*_renderer, _scale);
 
 	SDL_RenderPresent(_renderer);
 }
@@ -157,8 +147,8 @@ void Game::drawGame()
 
 void Game::update(float elapsedTime)
 {
-	_player.update(elapsedTime);
 	_level.update(elapsedTime);
+	_player.update(elapsedTime);
 }
 
 //Skaiciuoja kadrus per sekunde

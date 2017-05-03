@@ -34,6 +34,7 @@ private:
 
 	int _screenWidth;			//Lango plotis
 	int _screenHeight;			//Lango aukstis
+	float _scale;
 
 	GameState _gameState;		//Zaidimo busena
 	Input _input;

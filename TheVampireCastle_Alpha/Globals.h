@@ -2,7 +2,7 @@
 
 namespace glb
 {
-	const float scale = 4.0f;
+	const float scale = 3.0f;
 
 	enum Direction
 	{
@@ -20,6 +20,11 @@ namespace glb
 		Vec2f(float x, float y):
 			x(x),
 			y(y)
+		{}
+
+		Vec2f() :
+			x(0),
+			y(0)
 		{}
 	};
 	

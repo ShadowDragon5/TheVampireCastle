@@ -34,8 +34,8 @@ void Sprite::update()
 }
 
 
-void Sprite::draw(SDL_Renderer &renderer, glb::Vec2i destination)
+void Sprite::draw(SDL_Renderer &renderer, glb::Vec2i destination, float scale)
 {
-	SDL_Rect desRect = { destination.x, destination.y, _srcRect.w * glb::scale, _srcRect.h * glb::scale};
+	SDL_Rect desRect = { destination.x, destination.y, _srcRect.w * scale, _srcRect.h * scale};
 	SDL_RenderCopy(&renderer, _spriteSheet, &_srcRect, &desRect);
 }

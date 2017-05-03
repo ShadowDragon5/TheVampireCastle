@@ -14,17 +14,18 @@ Player::~Player()
 
 void Player::init(SDL_Renderer &renderer, glb::Vec2f pos)
 {
-	AnimatedSprite::init(glb::Vec4i(0, 0, 16, 16), pos, "Textures/Player.png", renderer, 200);
-	ResourceManager::loadImage("Textures/Player.png");
+	AnimatedSprite::init(glb::Vec4i(0, 0, 16, 16), pos, "content/sprites/Player.png", renderer, 200);
+	ResourceManager::loadImage("content/sprites/Player.png");
 
 	setUpAnimations();
 	_facing = glb::DOWN;
 }
 
 
-void Player::draw(SDL_Renderer &renderer)
+void Player::draw(SDL_Renderer &renderer, float scale)
 {
-	AnimatedSprite::draw(renderer, glb::Vec2i(_x, _y));
+	AnimatedSprite::draw(renderer, glb::Vec2i(_x, _y), scale);
+	_speed = scale / 15.0f;
 }
 
 
