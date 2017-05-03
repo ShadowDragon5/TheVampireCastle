@@ -11,7 +11,7 @@ public:
 	AnimatedSprite();
 	~AnimatedSprite();
 
-	void init(glb::Vec4i source, glb::Vec2f pos, const std::string &filePath, SDL_Renderer &renderer, float updateTime);
+	void init(glb::Vec4i source, glb::Vec2f pos, const std::string &filePath, SDL_Renderer &renderer, float updateTime, float scale);
 
 	void playAnimation(std::string animation, bool once = false);
 

@@ -2,6 +2,7 @@
 
 #include "tinyxml2.h"
 #include <sstream>
+#include <cmath>
 #include "ResourceManager.h"
 
 using namespace tinyxml2;
@@ -32,136 +33,6 @@ void Level::update(float elapsedTime)
 
 }
 
-
-
-/*
-void Level::loadMap(std::string mapName, SDL_Renderer &renderer)
-{
-	//parse .tmx fiel
-	XMLDocument doc;
-	std::stringstream ss;
-	ss << "content/levels/" << mapName << ".tmx";
-	doc.LoadFile(ss.str().c_str());
-
-	XMLElement* mapNode = doc.FirstChildElement("map");
-
-
-	int width, height;
-	mapNode->QueryIntAttribute("width", &width);
-	mapNode->QueryIntAttribute("height", &height);
-	_size = glb::Vec2i(width, height);
-
-	int tileW, tileH;
-	mapNode->QueryIntAttribute("tilewidth", &tileW);
-	mapNode->QueryIntAttribute("tileheight", &tileH);
-	_tileSize = glb::Vec2i(tileW, tileH);
-
-	//Laod tileSets
-
-	XMLElement* pTileset = mapNode->FirstChildElement("tileset");
-
-	if (pTileset != nullptr)
-		while (pTileset)
-		{
-			int firstgid;
-			const char* source = pTileset->FirstChildElement("image")->Attribute("source");
-			char* path;
-			std::stringstream ss;
-			ss << source;
-			pTileset->QueryIntAttribute("firstgid", &firstgid);
-			SDL_Texture* tex = SDL_CreateTextureFromSurface(&renderer, ResourceManager::loadImage(ss.str()));
-			_tilesets.push_back(Tileset(tex, firstgid));
-
-			pTileset = pTileset->NextSiblingElement("tileset");
-		}
-
-	//Loading layers
-
-	XMLElement* pLayer = mapNode->FirstChildElement("layer");
-	if (pLayer != nullptr)
-		while (pLayer)
-		{
-			//loading data element
-			XMLElement* pData = pLayer->FirstChildElement("data");
-			if (pData != nullptr)
-				while (pData)
-				{
-					XMLElement* pTile = pData->FirstChildElement("tile");
-					if (pTile != nullptr)
-					{
-						int tileCount = 0;
-						while (pTile)
-						{
-
-							if (pTile->IntAttribute("gid") == 0)
-							{
-								tileCount++;
-								if (pTile->NextSiblingElement("tile"))
-								{
-									pTile = pTile->NextSiblingElement("tile");
-									continue;
-								}
-								else
-								{
-									break;
-								}
-							}
-
-							int gid = pTile->IntAttribute("gid");
-							Tileset tls;
-
-							for (int i = 0; i < _tilesets.size(); i++)
-							{
-								if (_tilesets.at(i).FirstGid <= gid)
-								{
-									tls = _tilesets[i];
-									break;
-								}
-							}
-
-							if (tls.FirstGid == -1)
-							{
-								tileCount++;
-								if (pTile->NextSiblingElement("tile"))
-								{
-									pTile->NextSiblingElement("tile");
-									continue;
-								}
-								else
-									break;
-							}
-
-							int xx = 0, yy = 0;
-							xx = tileCount % width;
-							xx *= tileW;
-							yy += tileH * (tileCount / width);
-							glb::Vec2i finalTilePos = glb::Vec2i(xx, yy);
-
-							int tilesetWidth, tilesetHeight;
-							SDL_QueryTexture(tls.Texture, nullptr, nullptr, &tilesetWidth, &tilesetHeight);
-							int tsxx = gid % (tilesetWidth / tileW) - 1;
-							tsxx *= tileW;
-							int tsyy = 0;
-							int amt = gid / (tilesetWidth / tileW);
-							tsyy = tileH * amt;
-							glb::Vec2i finalTilesetPos = glb::Vec2i(tsxx, tsyy);
-
-							//Buils tile
-
-							Tile tile;
-							tile.init(tls.Texture, glb::Vec2i(tileW, tileH), finalTilesetPos, finalTilePos, 1);
-							_tileList.push_back(tile);
-							tileCount++;
-
-							pTile = pTile->NextSiblingElement("tile");
-						}
-					}
-					pData = pData->NextSiblingElement("data");
-				}
-			pLayer = pLayer->NextSiblingElement("layer");
-		}
-
-}*/
 
 void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 {
@@ -287,6 +158,70 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 			pLayer = pLayer->NextSiblingElement("layer");
 		}
 	}
+
+	XMLElement* pObjectGroup = mapNode->FirstChildElement("objectgroup");
+	if (pObjectGroup != NULL)
+	{
+		while (pObjectGroup)
+		{
+			const char* name = pObjectGroup->Attribute("name");
+			std::stringstream ss;
+			ss << name;
+
+			//collision
+			if (ss.str() == "collisions")
+			{
+				XMLElement* pObject = pObjectGroup->FirstChildElement("object");
+				if (pObject != NULL)
+				{
+					while (pObject)
+					{
+						float x, y, width, height;
+						x = pObject->FloatAttribute("x");
+						y = pObject->FloatAttribute("y");
+						width = pObject->FloatAttribute("width");
+						height = pObject->FloatAttribute("height");
+						_collRects.push_back(Rectangle(
+							std::ceil(x) * scale,
+							std::ceil(y) * scale,
+							std::ceil(width) * scale,
+							std::ceil(height) * scale
+						));
+
+						pObject = pObject->NextSiblingElement("object");
+					}
+				}
+			}
+
+			//spawn points
+			else if (ss.str() == "spawnPoints")
+			{
+				XMLElement* pObject = pObjectGroup->FirstChildElement("object");
+				if (pObject != NULL)
+				{
+					while (pObject)
+					{
+						float x = pObject->FloatAttribute("x");
+						float y = pObject->FloatAttribute("y");
+						const char* name = pObject->Attribute("name");
+						std::stringstream ss;
+						ss << name;
+						if (ss.str() == "player")
+						{
+							_spawnPoint = glb::Vec2f(x * scale, y * scale);
+						}
+
+
+						pObject = pObject->NextSiblingElement("object");
+					}
+				}
+			}
+
+			//other objects go here
+
+			pObjectGroup = pObjectGroup->NextSiblingElement("objectgroup");
+		}
+	}
 }
 
 
@@ -294,4 +229,14 @@ void Level::draw(SDL_Renderer &renderer, float scale)
 {
 	for (int i = 0; i < _tileList.size(); i++)
 		_tileList[i].draw(renderer, scale);
+}
+
+
+std::vector<Rectangle> Level::checkTileColisions(const Rectangle &other)
+{
+	std::vector<Rectangle> others;
+	for (int i = 0; i < _collRects.size(); i++)
+		if (_collRects[i].collidesWith(other))
+			others.push_back(_collRects[i]);
+	return others;
 }

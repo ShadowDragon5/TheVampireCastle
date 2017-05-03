@@ -6,11 +6,23 @@ namespace glb
 
 	enum Direction
 	{
+		UP,
+		DOWN,
 		LEFT,
 		RIGHT,
-		UP,
-		DOWN
+		NONE
 	};
+
+	//returns opposite direction
+	inline Direction getOppDir(Direction dir)
+	{
+		return
+			dir == UP ? DOWN :
+			dir == DOWN ? UP :
+			dir == LEFT ? RIGHT :
+			dir == RIGHT ? LEFT :
+			NONE;
+	}
 	
 	struct Vec2f
 	{

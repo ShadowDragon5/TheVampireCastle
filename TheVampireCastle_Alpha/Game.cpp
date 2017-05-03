@@ -24,8 +24,8 @@ void Game::run()
 {
 	initSystems();
 	
-	_player.init(*_renderer, glb::Vec2f(100, 100));
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
+	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
 
 	gameLoop();
 }
@@ -149,6 +149,12 @@ void Game::update(float elapsedTime)
 {
 	_level.update(elapsedTime);
 	_player.update(elapsedTime);
+
+	std::vector<Rectangle> others;
+	if ((others = _level.checkTileColisions(_player.getBoundBox())).size() > 0)
+	{
+		_player.handleTileCollisions(others);
+	}
 }
 
 //Skaiciuoja kadrus per sekunde

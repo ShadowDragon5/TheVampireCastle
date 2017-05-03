@@ -12,9 +12,9 @@ Player::~Player()
 }
 
 
-void Player::init(SDL_Renderer &renderer, glb::Vec2f pos)
+void Player::init(SDL_Renderer &renderer, glb::Vec2f pos, float scale)
 {
-	AnimatedSprite::init(glb::Vec4i(0, 0, 16, 16), pos, "content/sprites/Player.png", renderer, 200);
+	AnimatedSprite::init(glb::Vec4i(0, 0, 16, 16), pos, "content/sprites/Player.png", renderer, 200, scale);
 	ResourceManager::loadImage("content/sprites/Player.png");
 
 	setUpAnimations();
@@ -112,5 +112,38 @@ void Player::stopMoving()
 		break;
 	default:
 		break;
+	}
+}
+
+
+void Player::handleTileCollisions(std::vector<Rectangle> &others)
+{
+	for (int i = 0; i < others.size(); i++)
+	{
+		glb::Direction collDir = Sprite::getCollDir(others[i]);
+		if (collDir != glb::NONE)
+		{
+			switch (collDir)
+			{
+			case glb::UP:
+				_y = others[i].getBottom() + 1;
+				_dy = 0;
+				break;
+			case glb::DOWN:
+				_y = others[i].getTop() - _boundBox.getHeight() - 1;
+				_dy = 0;
+				break;
+			case glb::LEFT:
+				_x = others[i].getRight() + 1;
+				_dx = 0;
+				break;
+			case glb::RIGHT:
+				_x = others[i].getLeft() - _boundBox.getWidth() - 1;
+				_dx = 0;
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }

@@ -17,10 +17,10 @@ public:
 	inline int getCenterX() { return _x + _width / 2; }
 	inline int getCenterY() { return _y + _height / 2; }
 
-	inline int getLeft() { return _x; }
-	inline int getRight() { return _x + _width; }
-	inline int getTop() { return _y; }
-	inline int getBottom() { return _y + _height; }
+	inline int getLeft() const { return _x; }
+	inline int getRight() const { return _x + _width; }
+	inline int getTop() const { return _y; }
+	inline int getBottom() const { return _y + _height; }
 
 	inline int getSide(glb::Direction dir)
 	{
@@ -32,7 +32,7 @@ public:
 			glb::NONE;
 	}
 
-	bool collidesWith(Rectangle &other)
+	bool collidesWith(const Rectangle &other)
 	{
 		return
 			getRight() >= other.getLeft() &&
@@ -45,6 +45,9 @@ public:
 	{
 		return (_x >= 0 && _y >= 0 && _width >= 0 && _height >= 0);
 	}
+
+	inline int getWidth() { return _width; }
+	inline int getHeight() { return _height; }
 
 private:
 	int _x, _y, _width, _height;

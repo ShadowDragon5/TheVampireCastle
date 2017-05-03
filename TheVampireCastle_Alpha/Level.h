@@ -5,6 +5,7 @@
 
 #include "Globals.h"
 #include "Tile.h"
+#include "Rectangle.h"
 
 struct Tileset;
 
@@ -18,6 +19,10 @@ public:
 	void update(float elapsedTime);
 	void draw(SDL_Renderer &renderer, float scale);
 
+	std::vector<Rectangle> checkTileColisions(const Rectangle &other);
+
+	inline glb::Vec2f getPlayerSpawnPoint() { return _spawnPoint; }
+
 private:
 	void loadMap(std::string mapName, SDL_Renderer &renderer, float scale);
 
@@ -29,7 +34,8 @@ private:
 
 	std::vector<Tile> _tileList;
 	std::vector<Tileset> _tilesets;
-
+	std::vector<Rectangle> _collRects;			//collision rectangles
+	
 };
 
 

@@ -15,9 +15,9 @@ AnimatedSprite::~AnimatedSprite()
 {
 }
 
-void AnimatedSprite::init(glb::Vec4i source, glb::Vec2f pos, const std::string &filePath, SDL_Renderer &renderer, float updateTime)
+void AnimatedSprite::init(glb::Vec4i source, glb::Vec2f pos, const std::string &filePath, SDL_Renderer &renderer, float updateTime, float scale)
 {
-	Sprite::init(source, pos, filePath, renderer);
+	Sprite::init(source, pos, filePath, renderer, scale);
 	this->_timeToUpdate = updateTime;
 }
 
