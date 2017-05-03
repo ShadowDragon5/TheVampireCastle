@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Player.h"
 #include "Level.h"
+#include "HUD.h"
 
 enum GameState
 {
@@ -43,7 +44,7 @@ private:
 	float _maxFPS;				//Daugiausia leidziamu kadru per sekunde
 
 	Player _player;
-
 	Level _level;
+	HUD _hud;
 };
 

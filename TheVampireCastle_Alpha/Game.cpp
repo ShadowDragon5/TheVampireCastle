@@ -26,6 +26,7 @@ void Game::run()
 	
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
+	_hud.init(*_renderer, _player, _scale);
 
 	gameLoop();
 }
@@ -48,7 +49,7 @@ void Game::initSystems()
 	SDL_SetWindowTitle(_window, "The Vampire Castle");
 
 	//Sets background color
-	SDL_SetRenderDrawColor(_renderer, 255, 0, 255, 255);
+	SDL_SetRenderDrawColor(_renderer, 150, 0, 255, 255);
 }
 
 //Zaidimo ciklas
@@ -59,14 +60,13 @@ void Game::gameLoop()
 		float startTicks = SDL_GetTicks();
 
 		_input.beginNewFrame();
-
 		processInput();
 
 		drawGame();
 
 
 		//for debug
-		/*
+		
 		calculateFPS();
 		static int i = 0;
 		if (++i % 100 == 0)
@@ -74,7 +74,7 @@ void Game::gameLoop()
 			system("cls");
 			std::cout << _fps << std::endl;
 			i = 0;
-		}*/
+		}
 		
 		float frameTicks = SDL_GetTicks() - startTicks;
 		update(frameTicks < _maxFPS ? frameTicks : _maxFPS);
@@ -138,8 +138,9 @@ void Game::drawGame()
 
 	//TODO::recalculate tile postition for scaling
 	_level.draw(*_renderer, _scale);
-
 	_player.draw(*_renderer, _scale);
+
+	_hud.draw(*_renderer, _scale);
 
 	SDL_RenderPresent(_renderer);
 }
@@ -149,6 +150,7 @@ void Game::update(float elapsedTime)
 {
 	_level.update(elapsedTime);
 	_player.update(elapsedTime);
+	_hud.update(elapsedTime);
 
 	std::vector<Rectangle> others;
 	if ((others = _level.checkTileColisions(_player.getBoundBox())).size() > 0)

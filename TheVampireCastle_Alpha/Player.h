@@ -13,6 +13,7 @@ public:
 	void draw(SDL_Renderer &renderer, float scale);
 	void update(float elapsedTime);
 
+//movement functions
 	void moveUp();
 	void moveDown();
 	void moveRight();
@@ -20,14 +21,18 @@ public:
 	void stopMoving();
 
 	virtual void setUpAnimations();
-
 	void handleTileCollisions(std::vector<Rectangle> &others);
+
+//get
+	inline int getMaxHealth() { return _maxHealth; }
+	inline int getCurrHealth() { return _currHealth; }
 
 private:
 	float _dx, _dy;
-
 	glb::Direction _facing;
-
 	float _speed = glb::scale / 15.0f;
+
+	int _maxHealth;
+	int _currHealth;
 };
 

@@ -2,7 +2,11 @@
 #include "ResourceManager.h"
 
 
-Player::Player()
+Player::Player():
+	_dx(0.0f),
+	_dy(0.0f),
+	_maxHealth(10),
+	_currHealth(_maxHealth)
 {
 }
 
