@@ -21,9 +21,16 @@ public:
 	inline float getX() { return _x; }
 	inline float getY() { return _y; }
 
+	inline int getSrcRectX() { return _srcRect.x; }
+	inline int getSrcRectY() { return _srcRect.y; }
+	inline int getSrcRectW() { return _srcRect.w; }
+	inline int getSrcRectH() { return _srcRect.h; }
+
 //set
 	inline void setSrcRectX(int x) { _srcRect.x = x; }
 	inline void setSrcRectY(int y) { _srcRect.y = y; }
+	inline void setSrcRectW(int w) { _srcRect.w = w; }
+	inline void setSrcRectH(int h) { _srcRect.h = h; }
 
 
 protected:

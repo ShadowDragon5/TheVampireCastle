@@ -134,7 +134,7 @@ void Player::handleTileCollisions(std::vector<Rectangle> &others)
 				_dy = 0;
 				break;
 			case glb::DOWN:
-				_y = others[i].getTop() - _boundBox.getHeight() - 1;
+				_y = others[i].getTop() - 1 - _boundBox.getHeight();
 				_dy = 0;
 				break;
 			case glb::LEFT:
