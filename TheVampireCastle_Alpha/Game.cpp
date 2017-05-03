@@ -24,6 +24,8 @@ void Game::run()
 {
 	initSystems();
 	
+
+
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
 	_hud.init(*_renderer, _player, _scale);
@@ -148,7 +150,7 @@ void Game::drawGame()
 
 void Game::update(float elapsedTime)
 {
-	_level.update(elapsedTime);
+	_level.update(elapsedTime, _player);
 	_player.update(elapsedTime);
 	_hud.update(elapsedTime);
 

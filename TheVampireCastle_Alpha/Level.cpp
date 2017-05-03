@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include "ResourceManager.h"
+#include "Vampire1.h"
 
 using namespace tinyxml2;
 
@@ -28,9 +29,20 @@ void Level::init(std::string mapName, glb::Vec2f spawnPoint, SDL_Renderer &rende
 }
 
 
-void Level::update(float elapsedTime)
+void Level::update(float elapsedTime, Player &player)
 {
+	for (int i = 0; i < _enemies.size(); i++)
+		_enemies[i]->update(elapsedTime, player);
+}
 
+
+void Level::draw(SDL_Renderer &renderer, float scale)
+{
+	for (int i = 0; i < _tileList.size(); i++)
+		_tileList[i].draw(renderer, scale);
+
+	for (int i = 0; i < _enemies.size(); i++)
+		_enemies[i]->draw(renderer, scale);
 }
 
 
@@ -217,18 +229,35 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 				}
 			}
 
+			else if (ss.str() == "enemies")
+			{
+				XMLElement* pObject = pObjectGroup->FirstChildElement("object");
+				if (pObject != NULL)
+				{
+					while (pObject)
+					{
+						float x = pObject->FloatAttribute("x");
+						float y = pObject->FloatAttribute("y");
+						const char* name = pObject->Attribute("name");
+						std::stringstream ss;
+						ss << name;
+						if (ss.str() == "vampire1")
+						{
+							_enemies.push_back(new Vampire1(renderer, glb::Vec2f(x * scale, y * scale), scale));
+						}
+
+						pObject = pObject->NextSiblingElement("object");
+					}
+				}
+
+
+			}
+
 			//other objects go here
 
 			pObjectGroup = pObjectGroup->NextSiblingElement("objectgroup");
 		}
 	}
-}
-
-
-void Level::draw(SDL_Renderer &renderer, float scale)
-{
-	for (int i = 0; i < _tileList.size(); i++)
-		_tileList[i].draw(renderer, scale);
 }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="17">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="19">
  <tileset firstgid="1" name="Tiles" tilewidth="16" tileheight="16" tilecount="32" columns="8">
   <image source="../tilesets/Tiles.png" width="128" height="64"/>
  </tileset>
@@ -625,6 +625,14 @@
  </objectgroup>
  <objectgroup color="#00ff00" name="spawnPoints">
   <object id="13" name="player" x="209.333" y="119.667" width="15.6667" height="15">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup color="#ff0000" name="enemies">
+  <object id="17" name="vampire1" x="35" y="67.3333">
+   <ellipse/>
+  </object>
+  <object id="18" name="vampire1" x="122" y="131">
    <ellipse/>
   </object>
  </objectgroup>
