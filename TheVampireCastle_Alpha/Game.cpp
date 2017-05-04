@@ -58,7 +58,7 @@ void Game::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		float startTicks = SDL_GetTicks();
-
+		
 		_input.beginNewFrame();
 		processInput();
 
@@ -76,12 +76,16 @@ void Game::gameLoop()
 			i = 0;
 		}
 		
+
 		float frameTicks = SDL_GetTicks() - startTicks;
-		update(frameTicks < _maxFPS ? frameTicks : _maxFPS);
+		//update(frameTicks < 1000.0f / _maxFPS ? frameTicks : 1000.0f / _maxFPS);
+
 
 		//Apriboja FPS iki maxFPS
-		//if (1000.0f / _maxFPS > frameTicks)
-		//	SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		if (1000.0f / _maxFPS > frameTicks)
+			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+
+		update(1000.0f / _maxFPS);
 	}
 }
 
@@ -130,11 +134,11 @@ void Game::drawGame()
 	SDL_RenderClear(_renderer);
 
 	//Nuskaito lango dydi ir pakeicia piesiamu objektu dydi pagal tai
-	/*
+	
 	int h;
 	SDL_GetWindowSize(_window, nullptr, &h);
 	_scale = h * 3.0f / 480;
-	*/
+	
 
 	//TODO::recalculate tile postition for scaling
 	_level.draw(*_renderer, _scale);

@@ -5,7 +5,7 @@
 Player::Player():
 	_dx(0.0f),
 	_dy(0.0f),
-	_maxHealth(1000),
+	_maxHealth(20),
 	_currHealth(_maxHealth)
 {
 }
@@ -46,7 +46,12 @@ void Player::update(float elapsedTime)
 		_y += _dy * elapsedTime / 1.4;
 	}
 
-	gainHealth(elapsedTime);
+	static int time = 0;
+	if (++time % 100 == 0)
+	{
+		gainHealth(1);
+		time = 0;
+	}
 
 	AnimatedSprite::update(elapsedTime);
 }
