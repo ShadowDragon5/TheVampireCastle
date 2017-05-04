@@ -43,3 +43,9 @@ void Vampire1::setUpAnimations()
 	addAnimation("IdleRight", glb::Vec4i(0, 32, 16, 16), 1);
 	addAnimation("IdleLeft", glb::Vec4i(0, 48, 16, 16), 1);
 }
+
+
+void Vampire1::touchPlayer(Player* player)
+{
+	player->gainHealth(-1);
+}

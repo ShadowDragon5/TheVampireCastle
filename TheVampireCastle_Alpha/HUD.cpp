@@ -21,8 +21,9 @@ void HUD::init(SDL_Renderer &renderer, Player &player, float scale)
 }
 
 
-void HUD::update(float elapsedTime)
+void HUD::update(float elapsedTime, Player &player)
 {
+	*_player = player;
 	_healthNum1.setSrcRectX(8 * _player->getCurrHealth());
 	_healthCurrBar.setSrcRectW(64 * _player->getCurrHealth() / _player->getMaxHealth());
 }

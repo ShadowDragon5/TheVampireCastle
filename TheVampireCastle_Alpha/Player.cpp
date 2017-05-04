@@ -1,11 +1,11 @@
 #include "Player.h"
 #include "ResourceManager.h"
-
+#include "Enemy.h"
 
 Player::Player():
 	_dx(0.0f),
 	_dy(0.0f),
-	_maxHealth(10),
+	_maxHealth(1000),
 	_currHealth(_maxHealth)
 {
 }
@@ -45,6 +45,8 @@ void Player::update(float elapsedTime)
 		_x += _dx * elapsedTime / 1.4;
 		_y += _dy * elapsedTime / 1.4;
 	}
+
+	gainHealth(elapsedTime);
 
 	AnimatedSprite::update(elapsedTime);
 }
@@ -150,4 +152,20 @@ void Player::handleTileCollisions(std::vector<Rectangle> &others)
 			}
 		}
 	}
+}
+
+
+void Player::handleEnemyCollisions(std::vector<Enemy*> others)
+{
+	for (int i = 0; i < others.size(); i++)
+	{
+		others[i]->touchPlayer(this);
+	}
+}
+
+
+void Player::gainHealth(int amount)
+{
+	if ((amount < 0 && _currHealth > 0) || (amount > 0 && _currHealth < _maxHealth))
+		_currHealth += amount;
 }

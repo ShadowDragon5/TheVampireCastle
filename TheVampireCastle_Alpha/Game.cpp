@@ -23,8 +23,6 @@ Game::~Game()
 void Game::run()
 {
 	initSystems();
-	
-
 
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
@@ -152,13 +150,17 @@ void Game::update(float elapsedTime)
 {
 	_level.update(elapsedTime, _player);
 	_player.update(elapsedTime);
-	_hud.update(elapsedTime);
+	_hud.update(elapsedTime, _player);
 
 	std::vector<Rectangle> others;
-	if ((others = _level.checkTileColisions(_player.getBoundBox())).size() > 0)
+	if ((others = _level.checkTileCollisions(_player.getBoundBox())).size() > 0)
 	{
 		_player.handleTileCollisions(others);
 	}
+
+	std::vector<Enemy*> otherEn;
+	if ((otherEn = _level.checkEnemyCollisions(_player.getBoundBox())).size() > 0)
+		_player.handleEnemyCollisions(otherEn);
 }
 
 //Skaiciuoja kadrus per sekunde

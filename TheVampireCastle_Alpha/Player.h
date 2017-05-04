@@ -2,6 +2,9 @@
 #include <SDL\SDL.h>
 #include "AnimatedSprite.h"
 #include "Globals.h"
+#include <vector>
+
+class Enemy;
 
 class Player: public AnimatedSprite
 {
@@ -22,7 +25,9 @@ public:
 
 	virtual void setUpAnimations();
 	void handleTileCollisions(std::vector<Rectangle> &others);
+	void handleEnemyCollisions(std::vector<Enemy*> others);
 
+	void gainHealth(int amount);
 //get
 	inline int getMaxHealth() { return _maxHealth; }
 	inline int getCurrHealth() { return _currHealth; }

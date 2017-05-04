@@ -10,6 +10,7 @@ public:
 	
 	void update(float elapsedTime, Player &player);
 	void draw(SDL_Renderer &renderer, float scale);
+	void touchPlayer(Player* player);
 
 	void setUpAnimations();
 };

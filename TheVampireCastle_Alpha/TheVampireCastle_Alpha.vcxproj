@@ -126,6 +126,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedSprite.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Errors.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="HUD.cpp" />
@@ -137,9 +138,11 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
+    <ClCompile Include="Vampire1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimatedSprite.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Errors.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Globals.h" />
@@ -152,6 +155,7 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="tinyxml2.h" />
+    <ClInclude Include="Vampire1.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="content\sprites\Player.png" />

@@ -15,6 +15,7 @@ public:
 	void init(SDL_Renderer &renderer, std::string filePath, glb::Vec4i source, glb::Vec2f spawnPoint, float updateTime, float scale);
 	virtual void update(float elapsedTime, Player &player);
 	virtual void draw(SDL_Renderer &renderer, float scale);
+	virtual void touchPlayer(Player *player) = 0;
 
 //Get
 	inline int getMaxHealth() { return _maxHealth; }

@@ -10,7 +10,7 @@ public:
 	~HUD();
 
 	void init(SDL_Renderer &renderer, Player &player, float scale);
-	void update(float elapsedTime);
+	void update(float elapsedTime, Player &player);
 	void draw(SDL_Renderer &renderer, float scale);
 
 private:

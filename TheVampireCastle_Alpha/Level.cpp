@@ -261,11 +261,24 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 }
 
 
-std::vector<Rectangle> Level::checkTileColisions(const Rectangle &other)
+std::vector<Rectangle> Level::checkTileCollisions(const Rectangle &other)
 {
 	std::vector<Rectangle> others;
 	for (int i = 0; i < _collRects.size(); i++)
 		if (_collRects[i].collidesWith(other))
 			others.push_back(_collRects[i]);
+	return others;
+}
+
+std::vector<Enemy*> Level::checkEnemyCollisions(const Rectangle &other)
+{
+	std::vector<Enemy*> others;
+	for (int i = 0; i < _enemies.size(); i++)
+	{
+		if (_enemies[i]->getBoundBox().collidesWith(other))
+		{
+			others.push_back(_enemies[i]);
+		}
+	}
 	return others;
 }

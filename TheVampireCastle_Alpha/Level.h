@@ -20,7 +20,8 @@ public:
 	void update(float elapsedTime, Player &player);
 	void draw(SDL_Renderer &renderer, float scale);
 
-	std::vector<Rectangle> checkTileColisions(const Rectangle &other);
+	std::vector<Rectangle> checkTileCollisions(const Rectangle &other);
+	std::vector<Enemy*> checkEnemyCollisions(const Rectangle &other);
 
 	inline glb::Vec2f getPlayerSpawnPoint() { return _spawnPoint; }
 
