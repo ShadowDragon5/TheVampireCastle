@@ -18,6 +18,7 @@ private:
 
 	Sprite _healthBar;
 	Sprite _healthNum1;
+	Sprite _healthNum2;
 	Sprite _healthCurrBar;
 
 };

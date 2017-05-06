@@ -47,8 +47,6 @@ void AnimatedSprite::update(float elapsedTime)
 				setVisible(false);
 
 			_frameIndex = 0;
-
-			//animationDone
 		}
 	}
 }
@@ -83,5 +81,4 @@ void AnimatedSprite::resetAnimations()
 void AnimatedSprite::stopAnimation()
 {
 	_frameIndex = 0;
-	//animationDone
 }

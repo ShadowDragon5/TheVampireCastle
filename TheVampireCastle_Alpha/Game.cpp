@@ -1,12 +1,10 @@
 #include "Game.h"
 
-#include <iostream>
-
 Game::Game():
 	_window(nullptr),
 	_renderer(nullptr),
-	_screenWidth(854),
-	_screenHeight(480),
+	_screenWidth(1280),
+	_screenHeight(720),
 	_maxFPS(60.0f),
 	_scale(glb::scale)
 {
@@ -23,7 +21,8 @@ Game::~Game()
 void Game::run()
 {
 	initSystems();
-
+	
+	//Inicializuojami zaidimo elementai
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
 	_hud.init(*_renderer, _player, _scale);
@@ -35,21 +34,21 @@ void Game::run()
 void Game::initSystems()
 {
 	// Inicializuojami visi SDL parametrai
-	SDL_Init(SDL_INIT_EVERYTHING);	//TODO: remove not needed flags
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	//Creating Window
+	//Sukuriamas langas
 	SDL_CreateWindowAndRenderer(
 		_screenWidth,
 		_screenHeight,
-		0 |						//Flags
-		SDL_WINDOW_RESIZABLE,
+		0,
 		&_window,
 		&_renderer);
 
+	//Nustatomas lango pavadinimas
 	SDL_SetWindowTitle(_window, "The Vampire Castle");
 
-	//Sets background color
-	SDL_SetRenderDrawColor(_renderer, 150, 0, 255, 255);
+	//Nustato fono spalva
+	SDL_SetRenderDrawColor(_renderer, 64, 64, 64, 255);
 }
 
 //Zaidimo ciklas
@@ -71,17 +70,13 @@ void Game::gameLoop()
 		static int i = 0;
 		if (++i % 100 == 0)
 		{
-			system("cls");
-			std::cout << _fps << std::endl;
+			//system("cls");
+			std::printf("%f\n", _fps);
 			i = 0;
 		}
 		
-
-		float frameTicks = SDL_GetTicks() - startTicks;
-		//update(frameTicks < 1000.0f / _maxFPS ? frameTicks : 1000.0f / _maxFPS);
-
-
 		//Apriboja FPS iki maxFPS
+		float frameTicks = SDL_GetTicks() - startTicks;
 		if (1000.0f / _maxFPS > frameTicks)
 			SDL_Delay(1000.0f / _maxFPS - frameTicks);
 
@@ -94,7 +89,7 @@ void Game::processInput()
 {
 	SDL_Event evnt;
 
-	while (SDL_PollEvent(&evnt))
+	if (SDL_PollEvent(&evnt))
 	{
 		switch (evnt.type)
 		{
@@ -108,22 +103,33 @@ void Game::processInput()
 		case SDL_KEYUP:
 			_input.keyUpEvent(evnt);
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			_player.attack();
+			break;
 		default:
 			break;
 		}
-		//TODO: fix diaginal movement
 		if (_input.isKeyPressed(SDL_SCANCODE_ESCAPE))
 			_gameState = GameState::EXIT;
-		else if (_input.isKeyHeld(SDL_SCANCODE_W))
-			_player.moveUp();
-		else if (_input.isKeyHeld(SDL_SCANCODE_S))
-			_player.moveDown();
-		else if (_input.isKeyHeld(SDL_SCANCODE_D))
-			_player.moveRight();
-		else if (_input.isKeyHeld(SDL_SCANCODE_A))
-			_player.moveLeft();
-		else if (!_input.isKeyHeld(SDL_SCANCODE_W) && !_input.isKeyHeld(SDL_SCANCODE_S)
-			&& !_input.isKeyHeld(SDL_SCANCODE_D) && !_input.isKeyHeld(SDL_SCANCODE_A))
+
+		//Begimas
+		if (_input.isKeyHeld(SDL_SCANCODE_LSHIFT))
+			_player.sprint(0.3f);
+		else
+			_player.sprint(glb::scale / 15.0f);
+
+		if (_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP))
+			_player.moveUp(_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT) || _input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT));
+		if (_input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN))
+			_player.moveDown(_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT) || _input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT));
+		if (_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT))
+			_player.moveRight(_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP) || _input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN));
+		if (_input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT))
+			_player.moveLeft(_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP) || _input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN));
+		if (!_input.isKeyHeld(SDL_SCANCODE_W) && !_input.isKeyHeld(SDL_SCANCODE_S)
+			&& !_input.isKeyHeld(SDL_SCANCODE_D) && !_input.isKeyHeld(SDL_SCANCODE_A)
+			&& !_input.isKeyHeld(SDL_SCANCODE_UP) && !_input.isKeyHeld(SDL_SCANCODE_DOWN)
+			&& !_input.isKeyHeld(SDL_SCANCODE_RIGHT) && !_input.isKeyHeld(SDL_SCANCODE_LEFT))
 			_player.stopMoving();
 	}
 }
@@ -132,15 +138,7 @@ void Game::processInput()
 void Game::drawGame()
 {
 	SDL_RenderClear(_renderer);
-
-	//Nuskaito lango dydi ir pakeicia piesiamu objektu dydi pagal tai
 	
-	int h;
-	SDL_GetWindowSize(_window, nullptr, &h);
-	_scale = h * 3.0f / 480;
-	
-
-	//TODO::recalculate tile postition for scaling
 	_level.draw(*_renderer, _scale);
 	_player.draw(*_renderer, _scale);
 
@@ -165,6 +163,9 @@ void Game::update(float elapsedTime)
 	std::vector<Enemy*> otherEn;
 	if ((otherEn = _level.checkEnemyCollisions(_player.getBoundBox())).size() > 0)
 		_player.handleEnemyCollisions(otherEn);
+
+	if ((otherEn = _level.checkEnemyCollisions(_player.getAttackBox())).size() > 0)
+		_player.setAttackableEnemies(otherEn);
 }
 
 //Skaiciuoja kadrus per sekunde

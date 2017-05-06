@@ -28,8 +28,8 @@ void Tile::update(float elapsedTime)
 
 void Tile::draw(SDL_Renderer &renderer, float scale)
 {
-	SDL_Rect desRect = { _position.x, _position.y, _size.x * scale, _size.y * scale };
+	SDL_Rect destRect = { _position.x, _position.y, _size.x * scale, _size.y * scale };
 	SDL_Rect srcRect = { _tilesetPos.x, _tilesetPos.y, _size.x, _size.y };
 
-	SDL_RenderCopy(&renderer, _tileset, &srcRect, &desRect);
+	SDL_RenderCopy(&renderer, _tileset, &srcRect, &destRect);
 }

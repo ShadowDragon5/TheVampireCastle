@@ -1,6 +1,7 @@
 #include "Sprite.h"
 #include "Errors.h"
 #include "ResourceManager.h"
+#include "Enemy.h"
 
 Sprite::Sprite()
 {
@@ -52,6 +53,32 @@ glb::Direction Sprite::getCollDir(Rectangle &other) const
 	amtLeft = other.getRight() - getBoundBox().getLeft();
 	amtTop = other.getBottom() - getBoundBox().getTop();
 	amtBottom = getBoundBox().getBottom() - other.getTop();
+
+	int vals[4] = { abs(amtRight), abs(amtLeft), abs(amtTop), abs(amtBottom) };
+	int lowest = vals[0];
+	for (int i = 0; i < 4; i++) {
+		if (vals[i] < lowest) {
+			lowest = vals[i];
+		}
+	}
+
+	return
+		lowest == abs(amtRight) ? glb::RIGHT :
+		lowest == abs(amtLeft) ? glb::LEFT :
+		lowest == abs(amtTop) ? glb::UP :
+		lowest == abs(amtBottom) ? glb::DOWN :
+		glb::NONE;
+
+}
+
+
+glb::Direction Sprite::getCollDir(Enemy* &other) const
+{
+	int amtRight, amtLeft, amtTop, amtBottom;
+	amtRight = getBoundBox().getRight() - other->getBoundBox().getLeft();
+	amtLeft = other->getBoundBox().getRight() - getBoundBox().getLeft();
+	amtTop = other->getBoundBox().getBottom() - getBoundBox().getTop();
+	amtBottom = getBoundBox().getBottom() - other->getBoundBox().getTop();
 
 	int vals[4] = { abs(amtRight), abs(amtLeft), abs(amtTop), abs(amtBottom) };
 	int lowest = vals[0];

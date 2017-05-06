@@ -1,5 +1,5 @@
 #include "Vampire1.h"
-
+#include "Player.h"
 
 Vampire1::Vampire1()
 {
@@ -11,6 +11,9 @@ Vampire1::Vampire1(SDL_Renderer &renderer, glb::Vec2f spawnPoint, float scale)
 	Enemy::init(renderer, "content/sprites/vampire1.png", glb::Vec4i(0, 0, 16, 16), spawnPoint, 140, scale);
 	setUpAnimations();
 	playAnimation("IdleDown");
+	_maxHealth = 10;
+	_currHealth = _maxHealth;
+	_knockBack = 50;
 }
 
 
@@ -27,6 +30,7 @@ void Vampire1::update(float elapsedTime, Player &player)
 
 void Vampire1::draw(SDL_Renderer &renderer, float scale)
 {
+
 	Enemy::draw(renderer, scale);
 }
 

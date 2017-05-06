@@ -5,7 +5,7 @@
 Player::Player():
 	_dx(0.0f),
 	_dy(0.0f),
-	_maxHealth(20),
+	_maxHealth(10),
 	_currHealth(_maxHealth)
 {
 }
@@ -23,13 +23,14 @@ void Player::init(SDL_Renderer &renderer, glb::Vec2f pos, float scale)
 
 	setUpAnimations();
 	_facing = glb::DOWN;
+	_attack = 5;
+	_attackBox = Rectangle(_x, _y + _boundBox.getHeight(), _boundBox.getWidth(), _boundBox.getHeight());
 }
 
 
 void Player::draw(SDL_Renderer &renderer, float scale)
 {
 	AnimatedSprite::draw(renderer, glb::Vec2i(_x, _y), scale);
-	_speed = scale / 15.0f;
 }
 
 
@@ -42,8 +43,8 @@ void Player::update(float elapsedTime)
 	}
 	else
 	{
-		_x += _dx * elapsedTime / 1.4;
-		_y += _dy * elapsedTime / 1.4;
+		_x += _dx * elapsedTime / 1.41;
+		_y += _dy * elapsedTime / 1.41;
 	}
 
 	static int time = 0;
@@ -51,6 +52,24 @@ void Player::update(float elapsedTime)
 	{
 		gainHealth(1);
 		time = 0;
+	}
+
+	switch (_facing)
+	{
+	case glb::UP:
+		_attackBox = Rectangle(_x, _y - _boundBox.getHeight(), _boundBox.getWidth(), _boundBox.getHeight());
+		break;
+	case glb::DOWN:
+		_attackBox = Rectangle(_x, _y + _boundBox.getHeight(), _boundBox.getWidth(), _boundBox.getHeight());
+		break;
+	case glb::LEFT:
+		_attackBox = Rectangle(_x - _boundBox.getWidth(), _y, _boundBox.getWidth(), _boundBox.getHeight());
+		break;
+	case glb::RIGHT:
+		_attackBox = Rectangle(_x + _boundBox.getWidth(), _y, _boundBox.getWidth(), _boundBox.getHeight());
+		break;
+	default:
+		break;
 	}
 
 	AnimatedSprite::update(elapsedTime);
@@ -68,37 +87,50 @@ void Player::setUpAnimations()
 	addAnimation("IdleUp", glb::Vec4i(0, 16, 16, 16), 1);
 	addAnimation("IdleRight", glb::Vec4i(0, 32, 16, 16), 1);
 	addAnimation("IdleLeft", glb::Vec4i(0, 48, 16, 16), 1);
+
+	addAnimation("AttackDown", glb::Vec4i(48, 0, 16, 16), 1);
+	addAnimation("AttackUp", glb::Vec4i(48, 16, 16, 16), 1);
+	addAnimation("AttackRight", glb::Vec4i(48, 32, 16, 16), 1);
+	addAnimation("AttackLeft", glb::Vec4i(48, 48, 16, 16), 1);
 }
 
-void Player::moveUp()
+void Player::moveUp(bool movingX)
 {
 	_dy = -_speed;
 	playAnimation("WalkUp");
 	_facing = glb::UP;
+	if (!movingX)
+		_dx = 0.0f;
 }
 
 
-void Player::moveDown()
+void Player::moveDown(bool movingX)
 {
 	_dy = _speed;
 	playAnimation("WalkDown");
 	_facing = glb::DOWN;
+	if (!movingX)
+		_dx = 0.0f;
 }
 
 
-void Player::moveRight()
+void Player::moveRight(bool movingY)
 {
 	_dx = _speed;
 	playAnimation("WalkRight");
 	_facing = glb::RIGHT;
+	if (!movingY)
+		_dy = 0.0f;
 }
 
 
-void Player::moveLeft()
+void Player::moveLeft(bool movingY)
 {
 	_dx = -_speed;
 	playAnimation("WalkLeft");
 	_facing = glb::LEFT;
+	if (!movingY)
+		_dy = 0.0f;
 }
 
 
@@ -138,19 +170,19 @@ void Player::handleTileCollisions(std::vector<Rectangle> &others)
 			{
 			case glb::UP:
 				_y = others[i].getBottom() + 1;
-				_dy = 0;
+				//_dy = 0;
 				break;
 			case glb::DOWN:
 				_y = others[i].getTop() - 1 - _boundBox.getHeight();
-				_dy = 0;
+				//_dy = 0;
 				break;
 			case glb::LEFT:
 				_x = others[i].getRight() + 1;
-				_dx = 0;
+				//_dx = 0;
 				break;
 			case glb::RIGHT:
 				_x = others[i].getLeft() - _boundBox.getWidth() - 1;
-				_dx = 0;
+				//_dx = 0;
 				break;
 			default:
 				break;
@@ -165,7 +197,39 @@ void Player::handleEnemyCollisions(std::vector<Enemy*> others)
 	for (int i = 0; i < others.size(); i++)
 	{
 		others[i]->touchPlayer(this);
+
+		glb::Direction collDir = Sprite::getCollDir(others[i]);
+		if (collDir != glb::NONE)
+		{
+			switch (collDir)
+			{
+			case glb::UP:
+				_y = others[i]->getBoundBox().getBottom() + others[i]->getKnockBack();
+				//_dy = 0;
+				break;
+			case glb::DOWN:
+				_y = others[i]->getBoundBox().getTop() - others[i]->getKnockBack() - _boundBox.getHeight();
+				//_dy = 0;
+				break;
+			case glb::LEFT:
+				_x = others[i]->getBoundBox().getRight() + others[i]->getKnockBack();
+				//_dx = 0;
+				break;
+			case glb::RIGHT:
+				_x = others[i]->getBoundBox().getLeft() - _boundBox.getWidth() - others[i]->getKnockBack();
+				//_dx = 0;
+				break;
+			default:
+				break;
+			}
+		}
 	}
+}
+
+
+void Player::setAttackableEnemies(std::vector<Enemy*> enemies)
+{
+	_attackableEn = enemies;
 }
 
 
@@ -173,4 +237,36 @@ void Player::gainHealth(int amount)
 {
 	if ((amount < 0 && _currHealth > 0) || (amount > 0 && _currHealth < _maxHealth))
 		_currHealth += amount;
+}
+
+
+void Player::sprint(float amount)
+{
+		_speed = amount;
+}
+
+
+void Player::attack()
+{
+	switch (_facing)
+	{
+	case glb::UP:
+		playAnimation("AttackUp");
+		break;
+	case glb::DOWN:
+		playAnimation("AttackDown");
+		break;
+	case glb::LEFT:
+		playAnimation("AttackLeft");
+		break;
+	case glb::RIGHT:
+		playAnimation("AttackRight");
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < _attackableEn.size(); i++)
+	{
+		_attackableEn[i]->gainHealth(-_attack);
+	}
 }

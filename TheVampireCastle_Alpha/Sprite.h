@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "Rectangle.h"
 
+class Enemy;
+
 class Sprite
 {
 public:
@@ -16,10 +18,13 @@ public:
 
 	inline Rectangle getBoundBox() const { return _boundBox; }
 	glb::Direction getCollDir(Rectangle &other) const;
+	glb::Direction getCollDir(Enemy* &other) const;
 
 //get
 	inline float getX() { return _x; }
 	inline float getY() { return _y; }
+	inline float getOriginX() { return _x + _srcRect.w / 2; }
+	inline float getOriginY() { return _y + _srcRect.h / 2; }
 
 	inline int getSrcRectX() { return _srcRect.x; }
 	inline int getSrcRectY() { return _srcRect.y; }
@@ -36,7 +41,7 @@ public:
 protected:
 	SDL_Rect _srcRect;
 	SDL_Texture* _spriteSheet;
-	float _x, _y;					//Position
+	float _x, _y;					//Pozicija
 	float _scale;
 
 	Rectangle _boundBox;

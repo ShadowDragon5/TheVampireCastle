@@ -32,7 +32,7 @@ public:
 			glb::NONE;
 	}
 
-	bool collidesWith(const Rectangle &other)
+	inline bool collidesWith(const Rectangle &other)
 	{
 		return
 			getRight() >= other.getLeft() &&
@@ -41,13 +41,19 @@ public:
 			getBottom() >= other.getTop();
 	}
 
-	bool isValidRectangle()
+	inline bool isValidRectangle()
 	{
 		return (_x >= 0 && _y >= 0 && _width >= 0 && _height >= 0);
 	}
 
 	inline int getWidth() { return _width; }
 	inline int getHeight() { return _height; }
+
+//set
+	inline void setX(int x) { _x = x; }
+	inline void setY(int y) { _y = y; }
+	inline void setWidth(int width) { _width = width; }
+	inline void setHeight(int height) { _height = height; }
 
 private:
 	int _x, _y, _width, _height;

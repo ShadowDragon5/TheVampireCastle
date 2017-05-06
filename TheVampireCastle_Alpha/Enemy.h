@@ -4,7 +4,8 @@
 
 #include "AnimatedSprite.h"
 #include "Globals.h"
-#include "Player.h"
+
+class Player;
 
 class Enemy: public AnimatedSprite
 {
@@ -16,15 +17,20 @@ public:
 	virtual void update(float elapsedTime, Player &player);
 	virtual void draw(SDL_Renderer &renderer, float scale);
 	virtual void touchPlayer(Player *player) = 0;
+	void gainHealth(int amount);
 
 //Get
 	inline int getMaxHealth() { return _maxHealth; }
 	inline int getCurrHealth() { return _currHealth; }
+	inline int getKnockBack() { return _knockBack; }
+
 protected:
 	glb::Direction _direction;
 
 	int _maxHealth;
 	int _currHealth;
+
+	int _knockBack;
 
 };
 

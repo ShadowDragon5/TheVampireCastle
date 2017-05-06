@@ -16,21 +16,25 @@ public:
 	void draw(SDL_Renderer &renderer, float scale);
 	void update(float elapsedTime);
 
-//movement functions
-	void moveUp();
-	void moveDown();
-	void moveRight();
-	void moveLeft();
+//judejimo funkcijos
+	void moveUp(bool movingX);
+	void moveDown(bool movingX);
+	void moveRight(bool movingX);
+	void moveLeft(bool movingY);
 	void stopMoving();
 
 	virtual void setUpAnimations();
 	void handleTileCollisions(std::vector<Rectangle> &others);
 	void handleEnemyCollisions(std::vector<Enemy*> others);
+	void setAttackableEnemies(std::vector<Enemy*> enemies);
 
 	void gainHealth(int amount);
+	void sprint(float amount);
+	void attack();
 //get
 	inline int getMaxHealth() { return _maxHealth; }
 	inline int getCurrHealth() { return _currHealth; }
+	inline Rectangle getAttackBox() { return _attackBox; }
 
 private:
 	float _dx, _dy;
@@ -39,5 +43,8 @@ private:
 
 	int _maxHealth;
 	int _currHealth;
+	int _attack;
+	Rectangle _attackBox;
+	std::vector<Enemy*> _attackableEn;
 };
 

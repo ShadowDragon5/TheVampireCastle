@@ -1,11 +1,13 @@
 #include "Enemy.h"
 
+#include "Player.h"
 
 
 Enemy::Enemy() :
 	_direction(glb::DOWN),
 	_maxHealth(0),
-	_currHealth(0)
+	_currHealth(0),
+	_knockBack(0)
 {
 }
 
@@ -24,10 +26,23 @@ void Enemy::init(SDL_Renderer &renderer, std::string filePath, glb::Vec4i source
 void Enemy::update(float elapsedTime, Player &player)
 {
 	AnimatedSprite::update(elapsedTime);
+	
+	if (_currHealth <= 0)
+	{
+		AnimatedSprite::setVisible(false);
+		this->_boundBox = Rectangle(0, 0, 0, 0);
+	}
 }
 
 
 void Enemy::draw(SDL_Renderer &renderer, float scale)
 {
 	AnimatedSprite::draw(renderer, glb::Vec2i(_x, _y), scale);
+}
+
+
+void Enemy::gainHealth(int amount)
+{
+	if ((amount < 0 && _currHealth > 0) || (amount > 0 && _currHealth < _maxHealth))
+		_currHealth += amount;
 }

@@ -36,7 +36,7 @@ private:
 
 	std::vector<Tile> _tileList;
 	std::vector<Tileset> _tilesets;
-	std::vector<Rectangle> _collRects;			//collision rectangles
+	std::vector<Rectangle> _collRects;
 
 	std::vector<Enemy*> _enemies;
 	

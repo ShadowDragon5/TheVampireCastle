@@ -58,12 +58,12 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 	int width, height;
 	mapNode->QueryIntAttribute("width", &width);
 	mapNode->QueryIntAttribute("height", &height);
-	this->_size = glb::Vec2i(width, height);
+	_size = glb::Vec2i(width, height);
 
 	int tileWidth, tileHeight;
 	mapNode->QueryIntAttribute("tilewidth", &tileWidth);
 	mapNode->QueryIntAttribute("tileheight", &tileHeight);
-	this->_tileSize = glb::Vec2i(tileWidth, tileHeight);
+	_tileSize = glb::Vec2i(tileWidth, tileHeight);
 
 	XMLElement* pTileset = mapNode->FirstChildElement("tileset");
 	if (pTileset != NULL)
@@ -77,7 +77,7 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 			ss << source;
 			pTileset->QueryIntAttribute("firstgid", &firstgid);
 			SDL_Texture* tex = SDL_CreateTextureFromSurface(&renderer, ResourceManager::loadImage("content" + ss.str().erase(0, 1)));
-			this->_tilesets.push_back(Tileset(tex, firstgid));
+			_tilesets.push_back(Tileset(tex, firstgid));
 
 			pTileset = pTileset->NextSiblingElement("tileset");
 		}
@@ -108,18 +108,16 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 									continue;
 								}
 								else
-								{
 									break;
-								}
 							}
 
 							int gid = pTile->IntAttribute("gid");
 							Tileset tls;
-							for (int i = 0; i < this->_tilesets.size(); i++)
+							for (int i = 0; i < _tilesets.size(); i++)
 							{
-								if (this->_tilesets[i].FirstGid <= gid)
+								if (_tilesets[i].FirstGid <= gid)
 								{
-									tls = this->_tilesets.at(i);
+									tls = _tilesets.at(i);
 									break;
 								}
 							}
@@ -133,9 +131,7 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 									continue;
 								}
 								else
-								{
 									break;
-								}
 							}
 
 							int xx = 0;
@@ -156,17 +152,15 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 
 							Tile tile(tls.Texture, glb::Vec2i(tileWidth, tileHeight),
 								finalTilesetPosition, finalTilePosition, scale);
-							this->_tileList.push_back(tile);
+							_tileList.push_back(tile);
 							tileCounter++;
 
 							pTile = pTile->NextSiblingElement("tile");
 						}
 					}
-
 					pData = pData->NextSiblingElement("data");
 				}
 			}
-
 			pLayer = pLayer->NextSiblingElement("layer");
 		}
 	}
@@ -223,12 +217,12 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 							_spawnPoint = glb::Vec2f(x * scale, y * scale);
 						}
 
-
 						pObject = pObject->NextSiblingElement("object");
 					}
 				}
 			}
 
+			//enemies
 			else if (ss.str() == "enemies")
 			{
 				XMLElement* pObject = pObjectGroup->FirstChildElement("object");
@@ -249,11 +243,9 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 						pObject = pObject->NextSiblingElement("object");
 					}
 				}
-
-
 			}
 
-			//other objects go here
+			//kiti objekai
 
 			pObjectGroup = pObjectGroup->NextSiblingElement("objectgroup");
 		}
