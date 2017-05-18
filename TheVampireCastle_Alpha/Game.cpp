@@ -166,6 +166,8 @@ void Game::update(float elapsedTime)
 
 	if ((otherEn = _level.checkEnemyCollisions(_player.getAttackBox())).size() > 0)
 		_player.setAttackableEnemies(otherEn);
+	else
+		_player.setAttackableEnemies(std::vector<Enemy*>());
 }
 
 //Skaiciuoja kadrus per sekunde
