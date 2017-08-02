@@ -16,7 +16,7 @@ public:
 	void draw(SDL_Renderer &renderer, float scale);
 	void update(float elapsedTime);
 
-//judejimo funkcijos
+//Moving functions
 	void moveUp(bool movingX);
 	void moveDown(bool movingX);
 	void moveRight(bool movingX);
@@ -31,20 +31,21 @@ public:
 	void gainHealth(int amount);
 	void sprint(float amount);
 	void attack();
+
 //get
 	inline int getMaxHealth() { return _maxHealth; }
 	inline int getCurrHealth() { return _currHealth; }
 	inline Rectangle getAttackBox() { return _attackBox; }
 
 private:
-	float _dx, _dy;
-	glb::Direction _facing;
-	float _speed = glb::scale / 15.0f;
+	float _dx, _dy;						//
+	glb::Direction _facing;				//Side player is facing
+	float _speed = glb::scale / 15.0f;	//Player speed
 
 	int _maxHealth;
 	int _currHealth;
-	int _attack;
-	Rectangle _attackBox;
-	std::vector<Enemy*> _attackableEn;
+	int _attack;						//Attack dammage
+	Rectangle _attackBox;				//Area of attack
+	std::vector<Enemy*> _attackableEn;	//Vector of attackable enemies
 };
 

@@ -30,18 +30,18 @@ private:
 
 	void calculateFPS();
 
-	SDL_Window* _window;		//Lango rodykle
+	SDL_Window* _window;		//window pointer
 	SDL_Renderer* _renderer;
 
-	int _screenWidth;			//Lango plotis
-	int _screenHeight;			//Lango aukstis
+	int _screenWidth;			//window width
+	int _screenHeight;			//window height
 	float _scale;
 
-	GameState _gameState;		//Zaidimo busena
+	GameState _gameState;
 	Input _input;
 
-	float _fps;					//Kadrai per sekunde
-	float _maxFPS;				//Daugiausia leidziamu kadru per sekunde
+	float _fps;					//frames per second
+	float _maxFPS;				//maximum frames per second
 
 	Player _player;
 	Level _level;

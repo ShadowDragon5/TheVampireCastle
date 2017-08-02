@@ -4,7 +4,7 @@
 #include <iostream>
 #include <SDL\SDL.h>
 
-//Ivykus klaidai programa isjungiama ir konsoleje parasoma kas ivyko
+
 void fatalError(std::string errString)
 {
 	std::cout << errString << std::endl

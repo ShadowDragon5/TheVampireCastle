@@ -13,7 +13,7 @@ Vampire1::Vampire1(SDL_Renderer &renderer, glb::Vec2f spawnPoint, float scale)
 	playAnimation("IdleDown");
 	_maxHealth = 10;
 	_currHealth = _maxHealth;
-	_knockBack = 50;
+	_knockBack = 50 / 3 * scale;
 }
 
 

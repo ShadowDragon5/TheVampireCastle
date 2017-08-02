@@ -2,9 +2,9 @@
 
 int main(int argc, char **argv)
 {
-	Game game;		//Sukuriamas zaidimo objektas
+	Game game;		//Creating game object
 
-	game.run();		//Issaukiamas zaidimo paleidimo metodas
+	game.run();
 
 	return 0;
 }

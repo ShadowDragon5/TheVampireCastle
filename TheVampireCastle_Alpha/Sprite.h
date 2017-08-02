@@ -41,7 +41,7 @@ public:
 protected:
 	SDL_Rect _srcRect;
 	SDL_Texture* _spriteSheet;
-	float _x, _y;					//Pozicija
+	float _x, _y;					//Sprite pozition
 	float _scale;
 
 	Rectangle _boundBox;

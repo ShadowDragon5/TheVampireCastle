@@ -245,7 +245,7 @@ void Level::loadMap(std::string mapName, SDL_Renderer &renderer, float scale)
 				}
 			}
 
-			//kiti objekai
+			//other objects
 
 			pObjectGroup = pObjectGroup->NextSiblingElement("objectgroup");
 		}

@@ -22,7 +22,7 @@ void Game::run()
 {
 	initSystems();
 	
-	//Inicializuojami zaidimo elementai
+	//Initiating game elements
 	_level.init("TestRoom", glb::Vec2f(100, 100), *_renderer, _scale);
 	_player.init(*_renderer, _level.getPlayerSpawnPoint(), _scale);
 	_hud.init(*_renderer, _player, _scale);
@@ -30,28 +30,28 @@ void Game::run()
 	gameLoop();
 }
 
-//Inicializuojamos sistemos naudojamos zaidime
+
 void Game::initSystems()
 {
-	// Inicializuojami visi SDL parametrai
 	SDL_Init(SDL_INIT_EVERYTHING);
 
-	//Sukuriamas langas
+	//Creating window
 	SDL_CreateWindowAndRenderer(
 		_screenWidth,
 		_screenHeight,
-		0,
+		0							//flags
+		| SDL_WINDOW_RESIZABLE,
 		&_window,
 		&_renderer);
 
-	//Nustatomas lango pavadinimas
+	//Window name
 	SDL_SetWindowTitle(_window, "The Vampire Castle");
 
-	//Nustato fono spalva
+	//Background color
 	SDL_SetRenderDrawColor(_renderer, 64, 64, 64, 255);
 }
 
-//Zaidimo ciklas
+
 void Game::gameLoop()
 {
 	while (_gameState != GameState::EXIT)
@@ -75,20 +75,19 @@ void Game::gameLoop()
 			i = 0;
 		}
 		
-		//Apriboja FPS iki maxFPS
+		//Limits fps to maxFps
 		float frameTicks = SDL_GetTicks() - startTicks;
 		if (1000.0f / _maxFPS > frameTicks)
 			SDL_Delay(1000.0f / _maxFPS - frameTicks);
-
+			
 		update(1000.0f / _maxFPS);
 	}
 }
 
-//Apdoroja ivesties duomenis
+
 void Game::processInput()
 {
 	SDL_Event evnt;
-
 	if (SDL_PollEvent(&evnt))
 	{
 		switch (evnt.type)
@@ -109,15 +108,17 @@ void Game::processInput()
 		default:
 			break;
 		}
+
 		if (_input.isKeyPressed(SDL_SCANCODE_ESCAPE))
 			_gameState = GameState::EXIT;
 
-		//Begimas
+		//Sprinting
 		if (_input.isKeyHeld(SDL_SCANCODE_LSHIFT))
-			_player.sprint(0.3f);
+			_player.sprint(glb::scale * 0.1f);
 		else
 			_player.sprint(glb::scale / 15.0f);
 
+	//TODO: optimize
 		if (_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP))
 			_player.moveUp(_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT) || _input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT));
 		if (_input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN))
@@ -170,7 +171,7 @@ void Game::update(float elapsedTime)
 		_player.setAttackableEnemies(std::vector<Enemy*>());
 }
 
-//Skaiciuoja kadrus per sekunde
+
 void Game::calculateFPS()
 {
 	static const int NUM_SAMPLES = 10;

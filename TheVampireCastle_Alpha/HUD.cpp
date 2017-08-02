@@ -15,10 +15,10 @@ HUD::~HUD()
 void HUD::init(SDL_Renderer &renderer, Player &player, float scale)
 {
 	_player = &player;
-	_healthBar.init(glb::Vec4i(0, 0, 96, 22), glb::Vec2f(50.0f, 60.0f), "content/sprites/hud.png", renderer, scale);
-	_healthNum1.init(glb::Vec4i(0, 22, 8, 8), glb::Vec2f(50.0f, 102.0f), "content/sprites/hud.png", renderer, scale);
-	_healthNum2.init(glb::Vec4i(0, 22, 8, 8), glb::Vec2f(70.0f, 102.0f), "content/sprites/hud.png", renderer, scale);
-	_healthCurrBar.init(glb::Vec4i(96, 0, 96, 12), glb::Vec2f(50.0f, 60.0f), "content/sprites/hud.png", renderer, scale);
+	_healthBar.init(glb::Vec4i(0, 0, 96, 22), glb::Vec2f(50.0f / 3 * scale, 60.0f / 3 * scale), "content/sprites/hud.png", renderer, scale);
+	_healthNum1.init(glb::Vec4i(0, 22, 8, 8), glb::Vec2f(50.0f / 3 * scale, 102.0f / 3 * scale), "content/sprites/hud.png", renderer, scale);
+	_healthNum2.init(glb::Vec4i(0, 22, 8, 8), glb::Vec2f(70.0f / 3 * scale, 102.0f / 3 * scale), "content/sprites/hud.png", renderer, scale);
+	_healthCurrBar.init(glb::Vec4i(96, 0, 96, 12), glb::Vec2f(50.0f / 3 * scale, 60.0f / 3 * scale), "content/sprites/hud.png", renderer, scale);
 }
 
 
