@@ -23,7 +23,7 @@ void Player::init(SDL_Renderer &renderer, glb::Vec2f pos, float scale)
 
 	setUpAnimations();
 	_facing = glb::DOWN;
-	_attack = -10;
+	_attack = -5;
 	_attackBox = Rectangle(_x, _y + _boundBox.getHeight(), _boundBox.getWidth(), _boundBox.getHeight());
 }
 
@@ -47,8 +47,9 @@ void Player::update(float elapsedTime)
 		_y += _dy * elapsedTime / 1.41;
 	}
 
+//Health regen
 	static int time = 0;
-	if (++time % 50 == 0)
+	if ((this->_currHealth < _maxHealth) && (++time % 50 == 0))
 	{
 		gainHealth(1);
 		time = 0;
