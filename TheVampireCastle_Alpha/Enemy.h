@@ -32,5 +32,7 @@ protected:
 
 	int _knockBack;
 
+	int _c;
+
 };
 

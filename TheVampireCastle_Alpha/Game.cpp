@@ -61,10 +61,20 @@ void Game::gameLoop()
 		_input.beginNewFrame();
 		processInput();
 
+		while (_gameState == GameState::PAUSE)
+		{
+			if (_gameState == GameState::EXIT)
+			{
+				break;
+			}
+			_input.beginNewFrame();
+			processInput();
+		}
+
 		drawGame();
 
 
-		//for debug
+		// for debug Frame counter
 		
 		calculateFPS();
 		static int i = 0;
@@ -78,7 +88,9 @@ void Game::gameLoop()
 		//Limits fps to maxFps
 		float frameTicks = SDL_GetTicks() - startTicks;
 		if (1000.0f / _maxFPS > frameTicks)
+		{
 			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		}
 			
 		update(1000.0f / _maxFPS);
 	}
@@ -102,36 +114,67 @@ void Game::processInput()
 		case SDL_KEYUP:
 			_input.keyUpEvent(evnt);
 			break;
-		case SDL_MOUSEBUTTONDOWN:
-			_player.attack();
-			break;
 		default:
 			break;
 		}
 
+		//Exit
 		if (_input.isKeyPressed(SDL_SCANCODE_ESCAPE))
-			_gameState = GameState::EXIT;
-
-		//Sprinting
+			_gameState = _gameState == GameState::PAUSE ? 
+						GameState::PLAY : GameState::PAUSE;
+		
+		//Scaling
+		if (_input.isKeyHeld(SDL_SCANCODE_PAGEUP))
+			glb::dyScale += 0.5f;
+		if (_input.isKeyHeld(SDL_SCANCODE_PAGEDOWN))
+			glb::dyScale -= 0.5f;
+			
+		//Sprinting hardcoded :(
+		
 		if (_input.isKeyHeld(SDL_SCANCODE_LSHIFT))
 			_player.sprint(glb::scale * 0.1f);
 		else
 			_player.sprint(glb::scale / 15.0f);
+			
 
 	//TODO: optimize
-		if (_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP))
-			_player.moveUp(_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT) || _input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT));
-		if (_input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN))
-			_player.moveDown(_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT) || _input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT));
-		if (_input.isKeyHeld(SDL_SCANCODE_D) || _input.isKeyHeld(SDL_SCANCODE_RIGHT))
-			_player.moveRight(_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP) || _input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN));
-		if (_input.isKeyHeld(SDL_SCANCODE_A) || _input.isKeyHeld(SDL_SCANCODE_LEFT))
-			_player.moveLeft(_input.isKeyHeld(SDL_SCANCODE_W) || _input.isKeyHeld(SDL_SCANCODE_UP) || _input.isKeyHeld(SDL_SCANCODE_S) || _input.isKeyHeld(SDL_SCANCODE_DOWN));
-		if (!_input.isKeyHeld(SDL_SCANCODE_W) && !_input.isKeyHeld(SDL_SCANCODE_S)
-			&& !_input.isKeyHeld(SDL_SCANCODE_D) && !_input.isKeyHeld(SDL_SCANCODE_A)
-			&& !_input.isKeyHeld(SDL_SCANCODE_UP) && !_input.isKeyHeld(SDL_SCANCODE_DOWN)
-			&& !_input.isKeyHeld(SDL_SCANCODE_RIGHT) && !_input.isKeyHeld(SDL_SCANCODE_LEFT))
+		bool keyW = _input.isKeyHeld(SDL_SCANCODE_W) ||
+					_input.isKeyHeld(SDL_SCANCODE_UP),
+			keyS = _input.isKeyHeld(SDL_SCANCODE_S) ||
+					_input.isKeyHeld(SDL_SCANCODE_DOWN),
+			keyD = _input.isKeyHeld(SDL_SCANCODE_D) ||
+					_input.isKeyHeld(SDL_SCANCODE_RIGHT),
+			keyA = _input.isKeyHeld(SDL_SCANCODE_A) ||
+					_input.isKeyHeld(SDL_SCANCODE_LEFT);
+	
+
+		if (keyW)
+		{
+			_player.moveUp(keyD || keyA);
+		}
+		if (keyS)
+		{
+			_player.moveDown(keyD || keyA);
+		}
+		if (keyD)
+		{
+			_player.moveRight(keyW || keyS);
+		}
+		if (keyA)
+		{
+			_player.moveLeft(keyW || keyS);
+		}
+		
+		if (!keyW && !keyS &&
+			!keyD && !keyA)
+		{
 			_player.stopMoving();
+		}
+
+		if (_input.isKeyPressed(SDL_SCANCODE_RETURN))
+		{
+			_player.attack();
+		}
 	}
 }
 
@@ -155,12 +198,19 @@ void Game::update(float elapsedTime)
 	_player.update(elapsedTime);
 	_hud.update(elapsedTime, _player);
 
+	if (_player.getCurrHealth() == 0)
+	{
+		_gameState = GameState::PAUSE;
+		_player.gainHealth(_player.getMaxHealth());
+	}
+
 	std::vector<Rectangle> others;
 	if ((others = _level.checkTileCollisions(_player.getBoundBox())).size() > 0)
 	{
 		_player.handleTileCollisions(others);
 	}
 
+	// Enemy vector
 	std::vector<Enemy*> otherEn;
 	if ((otherEn = _level.checkEnemyCollisions(_player.getBoundBox())).size() > 0)
 		_player.handleEnemyCollisions(otherEn);
@@ -169,6 +219,8 @@ void Game::update(float elapsedTime)
 		_player.setAttackableEnemies(otherEn);
 	else
 		_player.setAttackableEnemies(std::vector<Enemy*>());
+
+	_scale = glb::dyScale;
 }
 
 

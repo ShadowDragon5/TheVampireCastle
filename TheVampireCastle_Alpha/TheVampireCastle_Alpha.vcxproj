@@ -167,7 +167,9 @@
     <ClInclude Include="Vampire1.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="content\sprites\hud.png" />
     <Image Include="content\sprites\Player.png" />
+    <Image Include="content\sprites\vampire1.png" />
     <Image Include="content\tilesets\Tiles.png" />
   </ItemGroup>
   <ItemGroup>

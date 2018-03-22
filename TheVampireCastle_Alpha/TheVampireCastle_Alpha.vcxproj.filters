@@ -112,6 +112,12 @@
     <Image Include="content\tilesets\Tiles.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="content\sprites\hud.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="content\sprites\vampire1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="content\levels\TestRoom.tmx">

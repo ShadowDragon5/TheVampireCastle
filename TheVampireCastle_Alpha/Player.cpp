@@ -49,7 +49,7 @@ void Player::update(float elapsedTime)
 
 //Health regen
 	static int time = 0;
-	if ((this->_currHealth < _maxHealth) && (++time % 50 == 0))
+	if ((this->_currHealth < _maxHealth) && (++time % 100 == 0))
 	{
 		gainHealth(1);
 		time = 0;
@@ -89,11 +89,12 @@ void Player::setUpAnimations()
 	addAnimation("IdleRight", glb::Vec4i(0, 32, 16, 16), 1);
 	addAnimation("IdleLeft", glb::Vec4i(0, 48, 16, 16), 1);
 
-	addAnimation("AttackDown", glb::Vec4i(48, 0, 16, 16), 1);
-	addAnimation("AttackUp", glb::Vec4i(48, 16, 16, 16), 1);
-	addAnimation("AttackRight", glb::Vec4i(48, 32, 16, 16), 1);
-	addAnimation("AttackLeft", glb::Vec4i(48, 48, 16, 16), 1);
+	addAnimation("AttackDown", glb::Vec4i(48, 0, 16, 16), 2);
+	addAnimation("AttackUp", glb::Vec4i(48, 16, 16, 16), 2);
+	addAnimation("AttackRight", glb::Vec4i(48, 32, 16, 16), 2);
+	addAnimation("AttackLeft", glb::Vec4i(48, 48, 16, 16), 2);
 }
+
 
 void Player::moveUp(bool movingX)
 {
@@ -236,8 +237,18 @@ void Player::setAttackableEnemies(std::vector<Enemy*> enemies)
 
 void Player::gainHealth(int amount)
 {
-	if ((amount < 0 && _currHealth > 0) || (amount > 0 && _currHealth < _maxHealth))
+	if (_currHealth + amount <= 0)
+	{
+		_currHealth = 0;
+	}
+	else if (_currHealth + amount >= _maxHealth)
+	{
+		_currHealth = _maxHealth;
+	}
+	else
+	{
 		_currHealth += amount;
+	}
 }
 
 

@@ -2,7 +2,8 @@
 
 namespace glb
 {
-	const float scale = 3.0f;	//3 by deffault
+	const float scale = 3.0f;
+	static float dyScale = 3.0;			//Dynamic
 	
 
 	enum Direction
@@ -14,7 +15,7 @@ namespace glb
 		NONE
 	};
 
-	//returns opposite direction
+	//Returns opposite direction
 	inline Direction getOppDir(Direction dir)
 	{
 		return

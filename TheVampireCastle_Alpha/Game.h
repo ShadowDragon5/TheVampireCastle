@@ -10,7 +10,8 @@
 enum GameState
 {
 	PLAY,
-	EXIT
+	EXIT,
+	PAUSE
 };
 
 class Game

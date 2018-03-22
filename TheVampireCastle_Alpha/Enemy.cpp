@@ -7,7 +7,8 @@ Enemy::Enemy() :
 	_direction(glb::DOWN),
 	_maxHealth(0),
 	_currHealth(0),
-	_knockBack(0)
+	_knockBack(0),
+	_c(0)
 {
 }
 
@@ -30,7 +31,18 @@ void Enemy::update(float elapsedTime, Player &player)
 	if (_currHealth <= 0)
 	{
 		AnimatedSprite::setVisible(false);
+		Rectangle tmp = this->_boundBox;
 		this->_boundBox = Rectangle(0, 0, 0, 0);
+
+		//Respawn
+		if (_c++ == 200)
+		{
+			AnimatedSprite::setVisible(true);
+			this->_boundBox = tmp;
+			_currHealth = _maxHealth;
+			_c = 0;
+		}
+
 	}
 }
 
